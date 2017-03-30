@@ -1,7 +1,6 @@
 package com.hub.web;
 
 import com.hub.dao.EntityDao;
-import com.hub.service.SessionService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -19,12 +18,11 @@ import java.net.URLEncoder;
  * @since Mar 7, 2014
  */
 public abstract class BaseResource {
-    private static final Log LOG = LogFactory.getLog(BaseResource.class);
     public final static String APPLICATION_JSON = "application/json; charset=utf-8";
+    private static final Log LOG = LogFactory.getLog(BaseResource.class);
     @Resource
     protected EntityDao entityDao;
-    @Resource
-    protected SessionService sessionService;
+
     @Context
     protected HttpServletRequest request;
 

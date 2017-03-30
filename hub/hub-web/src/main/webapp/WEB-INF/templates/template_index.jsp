@@ -7,16 +7,16 @@
 --%>
 <!DOCTYPE HTML>
 <%@ page language="java" pageEncoding="UTF-8" %>
-<%@ include file="/WEB-INF/commons/head.jsp"%>
+<%--<%@ include file="/WEB-INF/commons/head.jsp"%>--%>
 <html>
 <head>
-  <title>爱尔听力学院</title>
+  <title>Hello</title>
 </head>
 <body>
 <%@ include file="/WEB-INF/commons/message.jsp" %>
 <c:if test="${not _blank}">
   <d:body/>
 </c:if>
-<%@ include file="/WEB-INF/commons/footer.jsp"%>
+<%--<%@ include file="/WEB-INF/commons/footer.jsp"%>--%>
 </body>
 </html>
