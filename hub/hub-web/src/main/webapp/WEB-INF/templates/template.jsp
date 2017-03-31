@@ -10,7 +10,8 @@
 <%@ include file="/WEB-INF/commons/taglibs.jsp" %>
 <html>
 <head>
-  <title>Hello</title>
+  <%@ include file="/WEB-INF/commons/head.jsp"%>
+  <d:head />
 </head>
 <body>
 <%@ include file="/WEB-INF/commons/message.jsp" %>
