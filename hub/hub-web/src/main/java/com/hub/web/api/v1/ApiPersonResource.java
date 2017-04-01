@@ -33,6 +33,20 @@ public class ApiPersonResource extends BaseResource {
     private static Log LOG = LogFactory.getLog(ApiPersonResource.class);
 
     @GET
+    @Produces(APPLICATION_JSON)
+    public Map<String, Object> getAll() {
+        try {
+            List<Person> personList = entityDao.find("person", "status", "0", PersonRowMapper.getInstance(), 1, 100);
+            for (Person person : personList) {
+                person.setFriends(null);
+            }
+            return ResponseBuilder.ok(personList);
+        } catch (Throwable t) {
+            return ResponseBuilder.error(50000, t.getMessage());
+        }
+    }
+
+    @GET
     @Path("{id}")
 //    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(APPLICATION_JSON)
