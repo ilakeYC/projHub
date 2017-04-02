@@ -48,7 +48,6 @@ public class ApiPersonResource extends BaseResource {
 
     @GET
     @Path("{id}")
-//    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(APPLICATION_JSON)
     public Map<String, Object> get(@PathParam("id") long id) {
 
@@ -162,6 +161,23 @@ public class ApiPersonResource extends BaseResource {
             return ResponseBuilder.error(50000, t.getMessage());
         }
     }
+
+    @POST
+    @Path("{id}/remove")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Produces(APPLICATION_JSON)
+    public Map<String, Object> remove(@PathParam("id") long id) {
+        if (id <= 0) {
+            return ResponseBuilder.error(10503, "用户id不合法");
+        }
+        try {
+            entityDao.update("person", "id", id, "status", -1);
+            return ResponseBuilder.OK;
+        } catch (Throwable t) {
+            return ResponseBuilder.error(50000, t.getMessage());
+        }
+    }
+
 
     private void setPersonProperties(Person person) {
         String friendsJson = person.getFriends();
