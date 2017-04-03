@@ -101,6 +101,7 @@ public class ApiPersonResource extends BaseResource {
         }
 
         Entity entity = new Entity("person")
+                .set("status", 0)
                 .set("name", name)
                 .set("age", age)
                 .set("gender", gender);
