@@ -86,7 +86,7 @@
 
 ### Create One
 
-- Path : `/api/v1/person/`
+- Path : `/api/v1/person`
 - Method : `POST`
 - Param : 
 
