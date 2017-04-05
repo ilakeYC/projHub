@@ -167,7 +167,136 @@
     </div>
     <hr>
 </div>
+
+<hr>
+
+
+<c:out value="aaa"/>
+<c:out value="${aaa}"/>
+<c:out value="${aaa}" default="default"/>
+
+<c:set var="a" value="hello A"/>
+<c:set var="b" value="hello B" scope="session"/>
+<c:out value="${a}"/>
+<c:out value="${b}"/>
+
+<c:set var="c" value="hello C"/>
+<c:if test="${not empty c}">
+    <c:out value="${c}"/>
+</c:if>
+
+<c:set var="score" value="96"/>
+<c:choose>
+    <c:when test="${score > 100 || score < 0}">错误地分数：${score}</c:when>
+    <c:when test="${score >= 90}">A级</c:when>
+    <c:when test="${score >= 80}">B级</c:when>
+    <c:when test="${score >= 70}">C级</c:when>
+    <c:when test="${score >= 60}">D级</c:when>
+    <c:otherwise>E级</c:otherwise>
+</c:choose>
+
+
+<c:set var="sum" value="0"/>
+<c:forEach var="i" begin="1" end="10">
+    <c:set var="sum" value="${sum + i}"/>
+</c:forEach>
+<c:out value="sum = ${sum}"/>
+
+<c:set var="sum" value="0"/>
+<c:forEach var="i" begin="1" end="10" step="2">
+    <c:set var="sum" value="${sum + i}"/>
+</c:forEach>
+<c:out value="sum = ${sum}"/>
+
+<c:set var="score" value="66"/>
+<c:choose>
+    <c:when test="${score >= 100 || score < 0}">错误数据：${score}</c:when>
+    <c:when test="${score >= 90}">A级</c:when>
+    <c:when test="${score >= 80}">B级</c:when>
+    <c:when test="${score >= 70}">C级</c:when>
+    <c:when test="${score >= 60}">D级</c:when>
+    <c:otherwise>E级</c:otherwise>
+</c:choose>
+
+<%
+    out.println("Your IP address is " + request.getRemoteAddr());
+%>
+<%! int i = 520; %>
+<%! int a, b, c; %>
+<% out.println("i = " + i); %>
+<c:choose>
+    <c:when test="${score < 60}">你的score为：${score}</c:when>
+</c:choose>
+
+<p>
+    今天的日期是: <%= (new java.util.Date()).toLocaleString()%>
+</p>
+
+<%! int day = 8; %>
+<% if (day > 0 && day <= 7) { %>
+    <p>day day day day day</p>
+<% } else { %>
+    <p>not</p>
+<% } %>
+<%
+    switch (day) {
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+        case 5:
+        case 6:
+        case 7:
+            out.print("in the week");
+            break;
+        default:
+            out.print("error!");
+            break;
+    }
+%>
+<c:set var="total" value="0"/>
+<c:forEach var="i" begin="1" end="100" step="2">
+    <c:set var="total" value="${total + i}"/>
+</c:forEach>
+<c:out value="1+2+...+100 = ${total}"/>
+<hr>
+<c:out value="查看天数："/>
+<c:set var="days" value="0"/>
+<c:choose>
+    <c:when test="${days > 0 && days < 8}">一星期之内</c:when>
+    <c:when test="${days <= 0}">Error---${days}</c:when>
+    <c:otherwise>一周后</c:otherwise>
+</c:choose>
+
+<hr>
+
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <table class="table">
+                <tr>
+                    <th>Name</th>
+                    <th>Gender</th>
+                    <th>Age</th>
+                    <th>Friends</th>
+                </tr>
+                <c:forEach var="i" begin="1" end="4">
+                    <tr>
+                        <td></td>
+                        <td>1</td>
+                        <td>13</td>
+                        <td>3</td>
+                    </tr>
+                </c:forEach>
+            </table>
+        </div>
+    </div>
+</div>
+
 <!--code there-->
+
 <script>
 
     $(function () {
@@ -204,53 +333,39 @@
             }
         });
         $.getJSON('/api/v1/person', function(resp) {
+        $.getJSON('/api/v1/person', function (resp) {
             if (resp && resp.e == 0) {
                 var infoArr = resp.r;
                 for (var i = 0; i < infoArr.length; i++) {
                     var gender = infoArr[i].gender;
                     var trClassStr = infoArr[i].id.toString();
-                    var info = '<tr class = '+trClassStr+'><td>'+infoArr[i].name+'</td><td>'+gender+'</td><td>'+infoArr[i].age+'</td><td><button class="btn btn-default" type="button">查看好友</button></td></tr>';
+                    var info = '<tr class = ' + trClassStr + '><td>' + infoArr[i].name + '</td><td>' + gender + '</td><td>' + infoArr[i].age + '</td><td><button class="btn btn-default" type="button">查看好友</button></td></tr>';
                     $('.table2').append(info);
                 }
             }
         });
-        $('.addPersonBtn').click(function() {
+        $('.addPersonBtn').click(function () {
             $.ajax({
                 type: "POST",
                 url: "/api/v1/person",
                 data: getJsonData(),
-                success: function() {
+                success: function () {
                     alert("SUCCESS：存储成功");
                 },
-                error: function() {
+                error: function () {
                     alert("ERROR：存储失败！")
                 }
             })
         })
         function getJsonData() {
-            var genderStr = $("#genderTF").val();
             var json = {
-                name : $("#nameTF").val(),
-                age : parseInt($("#ageTF").val()),
-                gender : genderDigByStr($("#genderTF").val()),
-                friends : []
+                name: $("#nameTF").val(),
+                age: parseInt($("#ageTF").val()),
+                gender: genderDigByStr($("#genderTF").val()),
+                friends: []
             };
             return json;
         }
-
-        $(".updateBtn").click(function() {
-            $.ajax({
-                type: "POST",
-                url: "/api/v1/person/{id}/update",
-                data: updateJsonData(),
-                success: function() {
-                    alert("success!");
-                },
-                error: function() {
-                    alert("error")
-                }
-            })
-        })
         function genderDigByStr(genderStr) {
             if (genderStr == "男" || genderStr == "male") {
                 return 1;
@@ -258,19 +373,11 @@
                 return 2;
             }
         }
+
         function genderStrByDig(genderDig) {
             return genderDig == 1 ? "男" : "女";
         }
-        function updateJsonData() {
 
-            var json = {
-                name : $("#nameUpdateTF").val(),
-                gender: genderDigByStr($("#genderupdatetf").val()),
-                age: parseInt($("#ageupdatetf").val()),
-                friends: []
-            };
-            return json;
-        }
     })
 </script>
 <!--body-->
