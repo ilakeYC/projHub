@@ -16,9 +16,11 @@
     <property name="password" value="${password}" />
     <property name="testOnBorrow" value="true" />
   </bean>
+
   <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
     <property name="dataSource" ref="dataSource" />
   </bean>
+
   <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
     <property name="dataSource" ref="dataSource" />
   </bean>
@@ -27,20 +29,5 @@
   <context:component-scan base-package="com.hub.*" />
   <aop:aspectj-autoproxy proxy-target-class="true" />
   <tx:annotation-driven transaction-manager="txManager" />
-
-  <bean id="captchaService" class="com.octo.captcha.service.multitype.GenericManageableCaptchaService">
-    <constructor-arg index="0">
-      <ref bean="simpleCaptchaEngine" />
-    </constructor-arg>
-    <constructor-arg index="1">
-      <value>300</value>
-    </constructor-arg>
-    <constructor-arg index="2">
-      <value>20000</value>
-    </constructor-arg>
-    <constructor-arg index="3">
-      <value>20000</value>
-    </constructor-arg>
-  </bean>
 
 </beans>
