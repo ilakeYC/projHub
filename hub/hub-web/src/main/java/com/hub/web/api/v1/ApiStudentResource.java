@@ -1,12 +1,11 @@
 package com.hub.web.api.v1;
 
-import com.hub.dao.mapper.StudentRowMapper;
+import com.hub.dao.StudentDao;
 import com.hub.model.Student;
 import com.hub.util.ResponseBuilder;
 import com.hub.web.BaseResource;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -15,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * 用户界面 api
  * CRUD :
  * - create
  * - read
@@ -30,7 +30,7 @@ import java.util.Map;
 public class ApiStudentResource extends BaseResource {
 
   @Resource
-  private JdbcTemplate jdbcTemplate;
+  private StudentDao studentDao;
 
   /**
    * 查询所有学生信息
@@ -38,7 +38,7 @@ public class ApiStudentResource extends BaseResource {
   @GET
   @Produces(APPLICATION_JSON)
   public Map<String, Object> getStudents() {
-    List<Student> students = jdbcTemplate.query("SELECT * FROM student WHERE status = 1", StudentRowMapper.getInstance());
+    List<Student> students = studentDao.getStudents();
     return ResponseBuilder.ok(students);
   }
 
@@ -51,9 +51,7 @@ public class ApiStudentResource extends BaseResource {
   @Produces(APPLICATION_JSON)
   public Map<String, Object> getStudent(@PathParam("id") long id) {
 
-    Student student = jdbcTemplate.queryForObject("SELECT * FROM student WHERE id = ?",
-        new Object[]{id},
-        StudentRowMapper.getInstance());
+    Student student = studentDao.getStudent(id);
 
     return ResponseBuilder.ok(student);
   }
@@ -72,9 +70,9 @@ public class ApiStudentResource extends BaseResource {
                                            @QueryParam("age") int age,
                                            @QueryParam("gender") int gender) {
 
-    int update = jdbcTemplate.update("INSERT INTO student (name, age, gender, status, createTime) VALUES (?, ?, ?, ?, ?)",
-        name, age, gender, 1, System.currentTimeMillis());
-    if (update > 0) {
+    boolean b = studentDao.create(name, age, gender);
+
+    if (b) {
       return ResponseBuilder.OK;
     } else {
       return ResponseBuilder.error(10500, "学生信息增加失败");
@@ -95,8 +93,8 @@ public class ApiStudentResource extends BaseResource {
   public Map<String, Object> updateStudent(@QueryParam("id") long id,
                                            @QueryParam("age") int age) {
 
-    int update = jdbcTemplate.update("UPDATE student SET age = ? WHERE id = ?", age, id);
-    if (update > 0) {
+    boolean update = studentDao.update(id, age);
+    if (update) {
       return ResponseBuilder.OK;
     } else {
       return ResponseBuilder.error(10500, "学生信息更新失败");
@@ -115,8 +113,8 @@ public class ApiStudentResource extends BaseResource {
   @Path("delete")
   @Produces(APPLICATION_JSON)
   public Map<String, Object> deleteStudent(@QueryParam("id") long id) {
-    int update = jdbcTemplate.update("UPDATE student SET status = ? WHERE id = ?", -1, id);
-    if (update > 0) {
+    boolean delete = studentDao.delete(id);
+    if (delete) {
       return ResponseBuilder.OK;
     } else {
       return ResponseBuilder.error(10000, "ERROR");
